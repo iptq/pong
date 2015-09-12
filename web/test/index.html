@@ -55,7 +55,7 @@
                 //paddle.pivot.x = 107;
                 //paddle.pivot.y = 210;
 
-                ball.graphics = game.add.sprite(game.world.centerX, game.world.centerY, "circle");
+                ball.graphics = game.add.sprite(game.world.centerX + (Math.random() * 200 - 100), game.world.centerY + (Math.random() * 200 - 100), "circle");
                 ball.graphics.scale.setTo(0.75, 0.75);
 
                 /*
@@ -85,8 +85,11 @@
                     console.log(shapeContactBody);
                     console.log(contactEquation);
                     */
-                    ball.graphics.body.velocity.x = ball.graphics.body.velocity.destination[0] * 30;
-                    ball.graphics.body.velocity.y = ball.graphics.body.velocity.destination[1] * 30;
+									var xvel = ball.graphics.body.velocity.destination[0];
+									var yvel = ball.graphics.body.velocity.destination[1];
+									var multiplier = 150 / Math.sqrt(xvel*xvel + yvel*yvel);
+                    ball.graphics.body.velocity.x = xvel * multiplier;
+                    ball.graphics.body.velocity.y = yvel * multiplier;
                     //ball.graphics.body.applyImpulse([20, 20], 0, 0);
                 }
 
