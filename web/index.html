@@ -74,17 +74,22 @@
       step: function(dt) {
         this.p.x += this.p.vx * dt;
         this.p.y += this.p.vy * dt;
+				this.stage.collide(this);
       }, 
       collide: function(col) {
-        this.vx = 0;
+        /*this.p.vy = 0;*/
         console.log("HIT");
       }
     });
 
+	Q.scene("start",new Q.Scene(function(stage) {
     Q.load(["paddle.png", "ring.png", "ball.png"], function() {
       var paddle = new Q.Paddle();
       var ring = new Q.Ring();
       var ball = new Q.Ball();
+			stage.insert(paddle);
+			stage.insert(ring);
+			stage.insert(ball);
       Q.gameLoop(function(dt) {
         
         Q.clear();
@@ -98,6 +103,9 @@
         
       });
     });
+  }));
+	
+	Q.stageScene("start");
 
   </script>
 </html>
