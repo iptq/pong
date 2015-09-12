@@ -12,20 +12,29 @@
 	</head>
 	<body>
 		<script type="text/javascript">
-			var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+			var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
 			var ring;
 			var paddle = { angle: 0, width: 0.2 * Math.PI };
-			var ball = { x: 0, y: 0, radius: 15, velocity: 3, angle: Math.random() * Math.PI * 2 };
+			var ball = { x: 0, y: 0, radius: 15, velocity: 20, angle: Math.random() * Math.PI * 2 };
+			var offset = 10;
 			var cursors;
 			function preload() {
 				game.load.image("background", "assets/background.jpg");
+				game.load.image("circle", "assets/circle.png");
 			}
 			function create() {
 				game.add.tileSprite(0, 0, 800, 600, "background");
 				ring = new Phaser.Circle(game.world.centerX, game.world.centerY, 400);
-				paddle.graphics = game.add.graphics(game.world.centerX, game.world.centerY);
-				ball.graphics = game.add.graphics(game.world.centerX, game.world.centerY);
+				paddle.graphics = game.add.graphics(0, 0);
+				paddle.sprite = game.add.sprite(game.world.centerX, game.world.centerY);
+				paddle.sprite.addChild(paddle.graphics);
 				cursors = game.input.keyboard.createCursorKeys();
+				
+				game.physics.startSystem(Phaser.Physics.ARCADE);
+				ball.graphics = game.add.sprite(game.world.centerX, game.world.centerY, "circle");
+				ball.graphics.scale.setTo(0.1, 0.1);
+				game.physics.enable(ball.graphics, Phaser.Physics.ARCADE);
+				ball.graphics.body.velocity.setTo(ball.velocity * Math.cos(ball.angle), ball.velocity * Math.sin(ball.angle));
 			}
 			function update() {
 				game.debug.geom(ring, "#cfffff", false);
@@ -34,16 +43,22 @@
 				paddle.graphics.lineStyle(8, 0xacffcf);
 				paddle.graphics.arc(0, 0, 200, paddle.angle, paddle.angle + paddle.width);
 				
-				ball.graphics.clear();
-				ball.graphics.beginFill(0xff0000);
+				// ball.x += ball.velocity * Math.cos(ball.angle);
+				// ball.y += ball.velocity * Math.sin(ball.angle);
+				
+				/* ball.graphics.clear();
+				ball.graphics.beginFill(0xacffcf);
 				ball.graphics.drawCircle(ball.x, ball.y, ball.radius);
-				ball.graphics.endFill();
+				ball.graphics.endFill(); */
 				
 				if (cursors.left.isDown) {
 					paddle.angle += 0.04;
 				} else if (cursors.right.isDown) {
 					paddle.angle -= 0.04;
 				}
+			}
+			function render() {
+				game.debug.spriteInfo(ball.graphics, 32, 32);
 			}
 		</script>
 	</body>
