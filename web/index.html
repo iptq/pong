@@ -1,10 +1,61 @@
+<!DOCTYPE html>
 <html>
-	<head>
-		<title>Pong</title>
-		<script type="text/javascript" src="js/gun.js"></script>
-	</head>
-	<body>
-		<ul id="users"></ul>
-		<script type="text/javascript" src="js/pong.js"></script>
-	</body>
+<head>
+  <script type="text/javascript" src="lib/quintus.js"></script>
+  <script type="text/javascript" src="lib/quintus_sprites.js"></script>
+  <script type="text/javascript" src="lib/quintus_input.js"></script>
+  <script type="text/javascript" src="lib/quintus_scenes.js"></script>
+  <style type="text/css">
+    body {
+      background-color: #363636;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="game" width="1000" height="1000"></canvas>
+</body>
+<script type="text/javascript">
+    var Q = Quintus().include("Sprites, Scenes, Input").setup("game").controls();
+    Q.Sprite.extend("Paddle", {
+      init: function(p) {
+        this._super({
+          asset: "paddle.png",
+          x: 500,
+          y: 300,
+          points: [[226, 93], [295, 61], [357, 46], [412, 40], [469, 43], [525, 55], [603, 87], [623, 52], [540, 17], [472, 3], [419, 0], [330, 9], [259, 31], [207, 58]]
+        });
+        Q.input.on("left", this, "mLeft");
+        Q.input.on("right", this, "mRight");
+      },
+      mRight: function() {
+        this.p.angle += 35;
+      },
+      mLeft: function() {
+        this.p.angle -= 35;
+      }
+    });
+
+    Q.Sprite.extend("Ring", {
+      init: function(r) {
+        this._super({
+          asset: "ring.png",
+          x: 500,
+          y: 300
+        });
+      }
+    });
+
+    Q.load(["paddle.png", "ring.png"], function() {
+      var paddle = new Q.Paddle();
+      var ring = new Q.Ring();
+      Q.gameLoop(function(dt) {
+        Q.clear();
+        ring.update(dt);
+        ring.render(Q.ctx);
+        paddle.update(dt);
+        paddle.render(Q.ctx);
+      });
+    });
+
+  </script>
 </html>
