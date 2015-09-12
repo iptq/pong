@@ -40,15 +40,20 @@
             function preload() {
                 //game.load.image("background", "assets/background.jpg");
                 game.load.image("circle", "assets/ball.png");
-                game.load.image("paddle", "assets/paddle-solo.png");
+                game.load.image("paddle", "assets/paddle.png");
+                game.load.physics('sprites', 'assets/sprites.json');
             }
             function create() {
                 //game.add.tileSprite(0, 0, 800, 600, "background");
+
+                game.physics.startSystem(Phaser.Physics.P2JS);
+                game.physics.p2.defaultRestitution = 0.8;
+
                 ring = new Phaser.Circle(game.world.centerX, game.world.centerY, 400);
                 paddle = game.add.sprite(game.world.centerX, game.world.centerY, 'paddle');
                 //paddle.scale.setTo(0.5, 0.5);
-                paddle.pivot.x = 107;
-                paddle.pivot.y = 210;
+                //paddle.pivot.x = 107;
+                //paddle.pivot.y = 210;
 
                 ball.graphics = game.add.sprite(game.world.centerX, game.world.centerY, "circle");
                 ball.graphics.scale.setTo(0.75, 0.75);
@@ -60,18 +65,45 @@
                 */
                 cursors = game.input.keyboard.createCursorKeys();
                 
-                game.physics.startSystem(Phaser.Physics.ARCADE);
-                game.physics.enable(ball.graphics, Phaser.Physics.ARCADE);
-                game.physics.enable(paddle, Phaser.Physics.ARCADE);
+                //game.physics.startSystem(Phaser.Physics.ARCADE);
 
-                paddle.body.immovable = true;
+                game.physics.p2.enable([paddle, ball.graphics], true);
+
+                paddle.body.clearShapes();
+                ball.graphics.body.clearShapes();
+                paddle.body.loadPolygon('sprites', 'paddle');
+                ball.graphics.body.loadPolygon('sprites', 'ball');
+                ball.graphics.body.velocity.y = -150;
+
+                ball.graphics.body.onBeginContact.add(handleContact, this);
+
+                function handleContact(body, contactBody, shapeFromBody, shapeContactBody, contactEquation ){
+                    /*
+                    console.log(body);
+                    console.log(contactBody);
+                    console.log(shapeFromBody);
+                    console.log(shapeContactBody);
+                    console.log(contactEquation);
+                    */
+                    ball.graphics.body.velocity.x = ball.graphics.body.velocity.destination[0] * 30;
+                    ball.graphics.body.velocity.y = ball.graphics.body.velocity.destination[1] * 30;
+                    //ball.graphics.body.applyImpulse([20, 20], 0, 0);
+                }
+
+
+                //game.physics.enable(ball.graphics, Phaser.Physics.ARCADE);
+                //game.physics.enable(paddle, Phaser.Physics.ARCADE);
+
+                paddle.body.static = true;
+                /*
                 ball.graphics.body.collideWorldBounds = true;
-                ball.graphics.body.bounce.setTo(1, 1);
-                ball.graphics.body.velocity.setTo(ball.velocity * Math.cos(ball.angle), ball.velocity * Math.sin(ball.angle));
+                ball.graphics.body.bounce.setTo(1, 1);*/
+                //ball.graphics.body.velocity.setTo(ball.velocity * Math.cos(ball.angle), ball.velocity * Math.sin(ball.angle));
             }
             function update() {
                 game.debug.geom(ring, "#464646", false);
-                game.physics.arcade.collide(paddle, ball.graphics, collisionHandler, null, this);
+                //ball.graphics.body.applyImpulse([0.1, 0.1], 0, 0);
+                //game.physics.arcade.collide(paddle, ball.graphics, collisionHandler, null, this);
                 /*
                 paddle.graphics.clear();
                 paddle.graphics.lineStyle(8, 0xacffcf);
@@ -87,9 +119,11 @@
                 ball.graphics.endFill(); */
                 
                 if (cursors.right.isDown) {
-                    paddle.angle += 5;
+                    paddle.body.rotateRight(45);
                 } else if (cursors.left.isDown) {
-                    paddle.angle -= 5;
+                    paddle.body.rotateLeft(45);
+                } else {
+                    paddle.body.rotateLeft(0)
                 }
             }
 
