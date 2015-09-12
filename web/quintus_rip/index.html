@@ -18,7 +18,7 @@
     var Q = Quintus().include("Sprites, Scenes, Input").setup("game").controls();
 
   	Q.debug = true;
-    Q.MovingSprite.extend("Paddle", {
+    Q.Sprite.extend("Paddle", {
       
       init: function(p) {
         this._super({
@@ -26,30 +26,31 @@
           x: 500,
           y: 300,
           angle: 1,
-          
           // points: [[113, 46.5], [147.5, 30.5], [178.5, 23], [206, 20], [234.5, 21.5], [262.5, 27.5], [301.5, 43.5], [311.5, 26], [270, 8.5], [236, 1.5], [209.5, 0], [165, 4.5], [129.5, 15.5], [103.5, 29]]
           points: [[-97, -163.5], [-62.5, -179.5], [-31.5, -187], [-4, -190], [24.5, -188.5], [52.5, -182.5], [91.5, -166.5], [101.5, -184], [60, -201.5], [26, -208.5], [-0.5, -210], [-45, -205.5], [-80.5, -194.5], [-106.5, -181]]
         });
+        
         Q.input.on("left", this, "mLeft");
         Q.input.on("right", this, "mRight");
+        this.on("hit", this, "collision");
+      },
+      collision: function(col) {
+        console.log("HIT");
+        var ball = Q("Ball").first();
+        ball.p.vy = ball.p.vy * -1;
+      },
+      step: function(dt) {
+        this.stage.collide(this);
       },
       mRight: function() {
         this.p.angle += 30;
       },
       mLeft: function() {
         this.p.angle -= 30;
-      },
+      }
     });
 
     Q.MovingSprite.extend("Ring", {
-      /*
-      init: function(r) {
-        this._super({
-          asset: "ring.png",
-          x: 500,
-          y: 300
-        });
-      }*/
       draw: function(ctx) {
         ctx.fillStyle = "black";
         ctx.beginPath();
@@ -66,18 +67,20 @@
           x: 500,
           y: 500,
           vx: 0,
-          vy: -50,
+          vy: -200,
           points: [[0, -12], [-12, 0], [0, 12], [12, 0]]
         });
-        this.on("hit", this, "collide");
+        //this.on("hit", this, "collide");
       },     
       step: function(dt) {
         this.p.x += this.p.vx * dt;
         this.p.y += this.p.vy * dt;
-				this.stage.collide(this);
+				//this.stage.collide(this);
       }, 
       collide: function(col) {
-        /*this.p.vy = 0;*/
+        this.p.vy = this.p.vy * -1;
+        this.p.x -= col.separate[0];
+        this.p.y -= col.separate[1];
         console.log("HIT");
       }
     });
