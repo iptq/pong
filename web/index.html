@@ -17,32 +17,24 @@
 <script type="text/javascript">
     var Q = Quintus().include("Sprites, Scenes, Input").setup("game").controls();
     Q.MovingSprite.extend("Paddle", {
-      /*
+      
       init: function(p) {
-        
         this._super({
           asset: "paddle.png",
           x: 500,
-          y: 300
-          ,
+          y: 300,
+          
           points: [[113, 46.5], [147.5, 30.5], [178.5, 23], [206, 20], [234.5, 21.5], [262.5, 27.5], [301.5, 43.5], [311.5, 26], [270, 8.5], [236, 1.5], [209.5, 0], [165, 4.5], [129.5, 15.5], [103.5, 29]]
+          
         });
-        
         Q.input.on("left", this, "mLeft");
         Q.input.on("right", this, "mRight");
-      },*/
-      draw: function(ctx) {
-        ctx.strokeStyle = "#00bff3";
-        ctx.beginPath();
-        ctx.arc(500, 300, 200, 0, 0.2 * Math.PI);
-        ctx.lineWidth = 20;
-        ctx.stroke();
       },
       mRight: function() {
-        this.p.angle += 35;
+        this.p.angle += 30;
       },
       mLeft: function() {
-        this.p.angle -= 35;
+        this.p.angle -= 30;
       }
     });
 
