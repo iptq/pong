@@ -16,16 +16,27 @@
 </body>
 <script type="text/javascript">
     var Q = Quintus().include("Sprites, Scenes, Input").setup("game").controls();
-    Q.Sprite.extend("Paddle", {
+    Q.MovingSprite.extend("Paddle", {
+      /*
       init: function(p) {
+        
         this._super({
           asset: "paddle.png",
           x: 500,
-          y: 300,
-          points: [[226, 93], [295, 61], [357, 46], [412, 40], [469, 43], [525, 55], [603, 87], [623, 52], [540, 17], [472, 3], [419, 0], [330, 9], [259, 31], [207, 58]]
+          y: 300
+          ,
+          points: [[113, 46.5], [147.5, 30.5], [178.5, 23], [206, 20], [234.5, 21.5], [262.5, 27.5], [301.5, 43.5], [311.5, 26], [270, 8.5], [236, 1.5], [209.5, 0], [165, 4.5], [129.5, 15.5], [103.5, 29]]
         });
+        
         Q.input.on("left", this, "mLeft");
         Q.input.on("right", this, "mRight");
+      },*/
+      draw: function(ctx) {
+        ctx.strokeStyle = "#00bff3";
+        ctx.beginPath();
+        ctx.arc(500, 300, 200, 0, 0.2 * Math.PI);
+        ctx.lineWidth = 20;
+        ctx.stroke();
       },
       mRight: function() {
         this.p.angle += 35;
@@ -35,25 +46,62 @@
       }
     });
 
-    Q.Sprite.extend("Ring", {
+    Q.MovingSprite.extend("Ring", {
+      /*
       init: function(r) {
         this._super({
           asset: "ring.png",
           x: 500,
           y: 300
         });
+      }*/
+      draw: function(ctx) {
+        ctx.fillStyle = "black";
+        ctx.beginPath();
+        ctx.arc(500, 300, 200, 0, Math.PI * 2);
+        ctx.lineWidth = 20;
+        ctx.stroke();
       }
     });
 
-    Q.load(["paddle.png", "ring.png"], function() {
+    Q.Sprite.extend("Ball", {
+      init: function(b) {
+        this._super({
+          asset: "ball.png",
+          x: 500,
+          y: 500,
+          vx: 0,
+          vy: -35,
+          points: [[12, 0], [0, 12], [12, 24], [12, 12]]
+        });
+        this.on("hit", this, "collide");
+      },     
+      step: function(dt) {
+        this.p.x += this.p.vx * dt;
+        this.p.y += this.p.vy * dt;
+        //this.stage.collide(this);
+      }, 
+      collide: function(col) {
+        this.vx = 0;
+        console.log("HIT");
+      }
+    });
+
+    Q.load(["paddle.png", "ring.png", "ball.png"], function() {
       var paddle = new Q.Paddle();
       var ring = new Q.Ring();
+      var ball = new Q.Ball();
       Q.gameLoop(function(dt) {
+        
         Q.clear();
+
         ring.update(dt);
         ring.render(Q.ctx);
         paddle.update(dt);
         paddle.render(Q.ctx);
+        ball.update(dt);
+        ball.render(Q.ctx);
+        
       });
     });
 
