@@ -1,0 +1,50 @@
+<html>
+	<head>
+		<title>Pong</title>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.4.3/phaser.min.js"></script>
+		<style>
+			body {
+				background: #F0F0F0;
+				margin: 0;
+				padding: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<script type="text/javascript">
+			var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+			var ring;
+			var paddle = { angle: 0, width: 0.2 * Math.PI };
+			var ball = { x: 0, y: 0, radius: 15, velocity: 3, angle: Math.random() * Math.PI * 2 };
+			var cursors;
+			function preload() {
+				game.load.image("background", "assets/background.jpg");
+			}
+			function create() {
+				game.add.tileSprite(0, 0, 800, 600, "background");
+				ring = new Phaser.Circle(game.world.centerX, game.world.centerY, 400);
+				paddle.graphics = game.add.graphics(game.world.centerX, game.world.centerY);
+				ball.graphics = game.add.graphics(game.world.centerX, game.world.centerY);
+				cursors = game.input.keyboard.createCursorKeys();
+			}
+			function update() {
+				game.debug.geom(ring, "#cfffff", false);
+				
+				paddle.graphics.clear();
+				paddle.graphics.lineStyle(8, 0xacffcf);
+				paddle.graphics.arc(0, 0, 200, paddle.angle, paddle.angle + paddle.width);
+				
+				ball.graphics.clear();
+				ball.graphics.beginFill(0xff0000);
+				ball.graphics.drawCircle(ball.x, ball.y, ball.radius);
+				ball.graphics.endFill();
+				
+				if (cursors.left.isDown) {
+					paddle.angle += 0.04;
+				} else if (cursors.right.isDown) {
+					paddle.angle -= 0.04;
+				}
+			}
+		</script>
+	</body>
+</html>
