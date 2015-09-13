@@ -17,7 +17,7 @@
     </head>
     <body>
         <script type="text/javascript">
-            var game = new Phaser.Game(1000, 700, Phaser.AUTO, '', {
+           var game = new Phaser.Game(1000, 700, Phaser.AUTO, '', {
                 preload: preload, 
                 create: create, 
                 update: update, 
@@ -47,22 +47,24 @@
             }
             function create() {
                 //game.add.tileSprite(0, 0, 800, 600, "background");
-
                 game.physics.startSystem(Phaser.Physics.P2JS);
                 game.physics.p2.defaultRestitution = 0;
-
                 ring = game.add.sprite(game.world.centerX, game.world.centerY, 'ring');
                 paddle = game.add.sprite(game.world.centerX, game.world.centerY, 'paddle');
                 //paddle.scale.setTo(0.5, 0.5);
                 //paddle.pivot.x = 107;
                 //paddle.pivot.y = 210;
-
-                ball.graphics = game.add.sprite(game.world.centerX + (Math.random() * 200 - 100), game.world.centerY + (Math.random() * 200 - 100), "circle");
+                ball.graphics = game.add.sprite(game.world.centerX, game.world.centerY, "circle");
                 ball.graphics.scale.setTo(0.75, 0.75);
-
+                /*
+                paddle.graphics = game.add.graphics(0, 0);
+                paddle.sprite = game.add.sprite(game.world.centerX, game.world.centerY);
+                paddle.sprite.addChild(paddle.graphics);
+                */
                 cursors = game.input.keyboard.createCursorKeys();
+                
+                //game.physics.startSystem(Phaser.Physics.ARCADE);
                 game.physics.p2.enable([paddle, ball.graphics, ring], true);
-
                 paddle.body.clearShapes();
                 ball.graphics.body.clearShapes();
                 ring.body.clearShapes();
@@ -70,13 +72,8 @@
                 ball.graphics.body.loadPolygon('sprites', 'ball');
                 ring.body.loadPolygon('sprites', 'ring');
                 ball.graphics.body.velocity.y = -150;
-
                 ball.graphics.body.onBeginContact.add(handleContact, this);
-
-                paddle.body.static = true;
-                ring.body.static = true;
-
-                function handleContact(body, contactBody, shapeFromBody, shapeContactBody, contactEquation) {
+                function handleContact(body, contactBody, shapeFromBody, shapeContactBody, contactEquation ){
                     if(body.sprite.key === "ring") {
                         // Player did miss it, as it hit the ring!
                         ball.graphics.body.x = game.world.centerX;
@@ -89,33 +86,25 @@
                     } else { 
                         ball.graphics.body.velocity.x = ball.graphics.body.velocity.x * -1.5;
                         ball.graphics.body.velocity.y = ball.graphics.body.velocity.y * -1.5;
+                        /*
+                        console.log("Destination 0: " + ball.graphics.body.velocity.destination[0]);
+                        console.log("Destination 1: " + ball.graphics.body.velocity.destination[1]);
+                        if(Math.abs(ball.graphics.body.velocity.x) < 150 || Math.abs(ball.graphics.body.velocity.y) < 150) {
+                            ball.graphics.body.velocity.destination[0] *= 5;
+                            ball.graphics.body.velocity.destination[1] *= 5;
+                        } else if(Math.abs(ball.graphics.body.velocity.x) <= 5000 && Math.abs(ball.graphics.body.velocity.y) <= 5000) {
+                            ball.graphics.body.velocity.x = ball.graphics.body.velocity.destination[0] * 20;
+                            ball.graphics.body.velocity.y = ball.graphics.body.velocity.destination[1] * 20;
+                            
+                        }*/
                     }
-
-                    /*
-					var xvel = ball.graphics.body.velocity.destination[0];
-					var yvel = ball.graphics.body.velocity.destination[1];
-					var multiplier = 150 / Math.sqrt(xvel*xvel + yvel*yvel);
-
-                    ball.graphics.body.velocity.x = xvel * multiplier;
-                    ball.graphics.body.velocity.y = yvel * multiplier;
-                    */
                     //ball.graphics.body.applyImpulse([20, 20], 0, 0);
                 }
+                paddle.body.static = true;
+                ring.body.static = true;
                 /*
-                console.log("Destination 0: " + ball.graphics.body.velocity.destination[0]);
-                console.log("Destination 1: " + ball.graphics.body.velocity.destination[1]);
-                if(Math.abs(ball.graphics.body.velocity.x) < 150 || Math.abs(ball.graphics.body.velocity.y) < 150) {
-                    ball.graphics.body.velocity.destination[0] *= 5;
-                    ball.graphics.body.velocity.destination[1] *= 5;
-                } else if(Math.abs(ball.graphics.body.velocity.x) <= 5000 && Math.abs(ball.graphics.body.velocity.y) <= 5000) {
-                    ball.graphics.body.velocity.x = ball.graphics.body.velocity.destination[0] * 20;
-                    ball.graphics.body.velocity.y = ball.graphics.body.velocity.destination[1] * 20;
-                    
-                }
-
                 ball.graphics.body.collideWorldBounds = true;
-                ball.graphics.body.bounce.setTo(1, 1);
-                */
+                ball.graphics.body.bounce.setTo(1, 1);*/
                 //ball.graphics.body.velocity.setTo(ball.velocity * Math.cos(ball.angle), ball.velocity * Math.sin(ball.angle));
             }
             function update() {
@@ -146,11 +135,9 @@
                     paddle.body.rotateLeft(0)
                 }
             }
-
             function collisionHandler (obj1, obj2) {
                 game.stage.backgroundColor = '#992d2d';
             }
-
             function render() {
                 game.debug.spriteInfo(ball.graphics, 32, 32);
                 game.debug.body(paddle);

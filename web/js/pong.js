@@ -1,6 +1,6 @@
 var username = location.hash.slice(1);
 // while(username == null || username.length < 1 || username == "_") 
-//	username = prompt("What's your username?");
+//  username = prompt("What's your username?");
 
 var Gun = Gun || { };
 var gun = Gun(location.origin + "/gun");
@@ -14,15 +14,15 @@ var db = { };
 db.pong = gun.get("pong").set();
 db.paddle = gun.get("paddle").set();
 //function determineTurn() {
-	db.paddle.on(function(value) {
-		if (value.lock && value.lock.length > 0) {
-			isMyTurn = value.lock === username;
-			if (isMyTurn) try {document.getElementById("u_" + username).style.fontWeight = "bold"; } catch(e) {}
-			else try { document.getElementById("u_" + username).style.fontWeight = "normal"; } catch (e) {}
-		} else {
-			db.paddle.put({ "lock": username });
-		}
-	});
+    db.paddle.on(function(value) {
+        if (value.lock && value.lock.length > 0) {
+            isMyTurn = value.lock === username;
+            if (isMyTurn) try {document.getElementById("u_" + username).style.fontWeight = "bold"; } catch(e) {}
+            else try { document.getElementById("u_" + username).style.fontWeight = "normal"; } catch (e) {}
+        } else {
+            db.paddle.put({ "lock": username });
+        }
+    });
 //}
 //determineTurn();
 var users = db.pong.path("users").set();
@@ -31,38 +31,38 @@ var obj = {}; obj[username] = { score: 0 };
 users.put(obj);
 var existing_users = [ ];
 users.map(function(_user, _username) {
-	var el;
-	el = document.getElementById("u_" + _username);
-	if (el == null) {
-		existing_users.push(_username);
-		existing_users.sort();
-		el = document.createElement("li");
-		el.id = "u_" + _username;
-		document.getElementById("users").appendChild(el);
-	}
-	el.innerHTML = _username + ": " + _user["score"];
-	
+    var el;
+    el = document.getElementById("u_" + _username);
+    if (el == null) {
+        existing_users.push(_username);
+        existing_users.sort();
+        el = document.createElement("li");
+        el.id = "u_" + _username;
+        document.getElementById("users").appendChild(el);
+    }
+    el.innerHTML = _username + ": " + _user["score"];
+    
 });
 
 
 /** BEGIN GAME **/
 var game = new Phaser.Game(1000, 700, Phaser.AUTO, '', {
-		preload: preload, 
-		create: create, 
-		update: update, 
-		render: render
+        preload: preload, 
+        create: create, 
+        update: update, 
+        render: render
 });
 var ring;
 var paddle = {
-		angle: 0,
-		width: 0.2 * Math.PI
+        angle: 0,
+        width: 0.2 * Math.PI
 };
 var ball = {
-		x: 0, 
-		y: 0, 
-		radius: 15, 
-		velocity: 100, 
-		angle: Math.random() * Math.PI * 2 
+        x: 0, 
+        y: 0, 
+        radius: 15, 
+        velocity: 100, 
+        angle: Math.random() * Math.PI * 2 
 };
 var offset = 10;
 var cursors;
@@ -128,12 +128,12 @@ function create() {
             ball.graphics.body.velocity.y = ball.graphics.body.velocity.y * -1.5;
         }
 
-		var xvel = ball.graphics.body.velocity.destination[0];
-		var yvel = ball.graphics.body.velocity.destination[1];
-		var multiplier = 150 / Math.sqrt(xvel*xvel + yvel*yvel);
+        var xvel = ball.graphics.body.velocity.destination[0];
+        var yvel = ball.graphics.body.velocity.destination[1];
+        var multiplier = 150 / Math.sqrt(xvel * xvel + yvel * yvel);
         ball.graphics.body.velocity.x = xvel * multiplier;
         ball.graphics.body.velocity.y = yvel * multiplier;
-        //ball.graphics.body.applyImpulse([20, 20], 0, 0);
+
     }
             /*
             console.log("Destination 0: " + ball.graphics.body.velocity.destination[0]);

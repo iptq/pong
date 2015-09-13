@@ -1,0 +1,49 @@
+{ 
+    
+    "paddle-solo": [
+        
+        {
+            "density": 2, "friction": 0, "bounce": 0, 
+            "filter": { "categoryBits": 1, "maskBits": 65535 },
+            "shape": [   30, 15  ,  54, 7  ,  46, 30  ,  13, 46  ,  2, 29  ]
+        } ,
+        {
+            "density": 2, "friction": 0, "bounce": 0, 
+            "filter": { "categoryBits": 1, "maskBits": 65535 },
+            "shape": [   54, 7  ,  85, 1  ,  74, 23  ,  46, 30  ]
+        } ,
+        {
+            "density": 2, "friction": 0, "bounce": 0, 
+            "filter": { "categoryBits": 1, "maskBits": 65535 },
+            "shape": [   85, 1  ,  125, 0  ,  107, 20  ,  74, 23  ]
+        } ,
+        {
+            "density": 2, "friction": 0, "bounce": 0, 
+            "filter": { "categoryBits": 1, "maskBits": 65535 },
+            "shape": [   125, 0  ,  150, 3  ,  142, 22  ,  107, 20  ]
+        } ,
+        {
+            "density": 2, "friction": 0, "bounce": 0, 
+            "filter": { "categoryBits": 1, "maskBits": 65535 },
+            "shape": [   150, 3  ,  176, 11  ,  170, 31  ,  142, 22  ]
+        } ,
+        {
+            "density": 2, "friction": 0, "bounce": 0, 
+            "filter": { "categoryBits": 1, "maskBits": 65535 },
+            "shape": [   176, 11  ,  211, 26  ,  201, 43  ,  170, 31  ]
+        }
+    ]
+    , 
+    "ball": [
+        
+        {
+            "density": 2, "friction": 0, "bounce": 0, 
+            "filter": { "categoryBits": 1, "maskBits": 65535 },
+            "shape": [   25, 0  ,  25, 25  ,  0, 25  ,  0, 0  ]
+        }
+    ]
+    , 
+    "ring": [
+        
+    ]
+}
