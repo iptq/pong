@@ -8,6 +8,7 @@ var Gun = Gun || { };
 var gun = Gun(location.origin + "/gun");
 
 var pong = gun.get("pong").set();
+
 var users = pong.path("users").set();
 var obj = {}; obj[username] = { score: 0 };
 users.put(obj);

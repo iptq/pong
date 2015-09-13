@@ -41,15 +41,16 @@
                 //game.load.image("background", "assets/background.jpg");
                 game.load.image("circle", "assets/ball.png");
                 game.load.image("paddle", "assets/paddle.png");
+                game.load.image("ring", "assets/ring.png");
                 game.load.physics('sprites', 'assets/sprites.json');
             }
             function create() {
                 //game.add.tileSprite(0, 0, 800, 600, "background");
 
                 game.physics.startSystem(Phaser.Physics.P2JS);
-                game.physics.p2.defaultRestitution = 0.8;
+                game.physics.p2.defaultRestitution = 0;
 
-                ring = new Phaser.Circle(game.world.centerX, game.world.centerY, 400);
+                ring = game.add.sprite(game.world.centerX, game.world.centerY, 'ring');
                 paddle = game.add.sprite(game.world.centerX, game.world.centerY, 'paddle');
                 //paddle.scale.setTo(0.5, 0.5);
                 //paddle.pivot.x = 107;
@@ -67,41 +68,56 @@
                 
                 //game.physics.startSystem(Phaser.Physics.ARCADE);
 
-                game.physics.p2.enable([paddle, ball.graphics], true);
+                game.physics.p2.enable([paddle, ball.graphics, ring], true);
 
                 paddle.body.clearShapes();
                 ball.graphics.body.clearShapes();
+                ring.body.clearShapes();
                 paddle.body.loadPolygon('sprites', 'paddle');
                 ball.graphics.body.loadPolygon('sprites', 'ball');
+                ring.body.loadPolygon('sprites', 'ring');
                 ball.graphics.body.velocity.y = -150;
 
                 ball.graphics.body.onBeginContact.add(handleContact, this);
 
                 function handleContact(body, contactBody, shapeFromBody, shapeContactBody, contactEquation ){
-                    /*
-                    console.log(body);
-                    console.log(contactBody);
-                    console.log(shapeFromBody);
-                    console.log(shapeContactBody);
-                    console.log(contactEquation);
-                    */
-                    ball.graphics.body.velocity.x = ball.graphics.body.velocity.destination[0] * 30;
-                    ball.graphics.body.velocity.y = ball.graphics.body.velocity.destination[1] * 30;
+                    if(body.sprite.key === "ring") {
+                        // Player did miss it, as it hit the ring!
+                        ball.graphics.body.x = game.world.centerX;
+                        ball.graphics.body.y = game.world.centerY;
+                        ball.graphics.body.velocity.x = 0;
+                        ball.graphics.body.velocity.y = 0;
+                        setTimeout(function() {
+                            ball.graphics.body.velocity.y = -150;
+                        }, 2000);
+                    } else { 
+                        ball.graphics.body.velocity.x = ball.graphics.body.velocity.x * -1.5;
+                        ball.graphics.body.velocity.y = ball.graphics.body.velocity.y * -1.5;
+                        /*
+                        console.log("Destination 0: " + ball.graphics.body.velocity.destination[0]);
+                        console.log("Destination 1: " + ball.graphics.body.velocity.destination[1]);
+                        if(Math.abs(ball.graphics.body.velocity.x) < 150 || Math.abs(ball.graphics.body.velocity.y) < 150) {
+                            ball.graphics.body.velocity.destination[0] *= 5;
+                            ball.graphics.body.velocity.destination[1] *= 5;
+                        } else if(Math.abs(ball.graphics.body.velocity.x) <= 5000 && Math.abs(ball.graphics.body.velocity.y) <= 5000) {
+                            ball.graphics.body.velocity.x = ball.graphics.body.velocity.destination[0] * 20;
+                            ball.graphics.body.velocity.y = ball.graphics.body.velocity.destination[1] * 20;
+                            
+                        }*/
+
+                    }
                     //ball.graphics.body.applyImpulse([20, 20], 0, 0);
                 }
 
-
-                //game.physics.enable(ball.graphics, Phaser.Physics.ARCADE);
-                //game.physics.enable(paddle, Phaser.Physics.ARCADE);
-
                 paddle.body.static = true;
+                ring.body.static = true;
                 /*
                 ball.graphics.body.collideWorldBounds = true;
                 ball.graphics.body.bounce.setTo(1, 1);*/
                 //ball.graphics.body.velocity.setTo(ball.velocity * Math.cos(ball.angle), ball.velocity * Math.sin(ball.angle));
             }
             function update() {
-                game.debug.geom(ring, "#464646", false);
+                //game.debug.geom(ring, "#464646", false);
                 //ball.graphics.body.applyImpulse([0.1, 0.1], 0, 0);
                 //game.physics.arcade.collide(paddle, ball.graphics, collisionHandler, null, this);
                 /*
@@ -119,9 +135,9 @@
                 ball.graphics.endFill(); */
                 
                 if (cursors.right.isDown) {
-                    paddle.body.rotateRight(45);
+                    paddle.body.rotateRight(60);
                 } else if (cursors.left.isDown) {
-                    paddle.body.rotateLeft(45);
+                    paddle.body.rotateLeft(60);
                 } else {
                     paddle.body.rotateLeft(0)
                 }
