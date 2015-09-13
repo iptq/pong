@@ -1,12 +1,16 @@
 <html>
 	<head>
 		<title>Pong</title>
+		<link href='https://fonts.googleapis.com/css?family=Audiowide' rel='stylesheet' type='text/css'>
 		<script type="text/javascript" src="/js/gun.js"></script>
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.4.3/phaser.min.js"></script>
 		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 		<style>
+			body * {
+				font-family: "Audiowide", sans-serif;
+			}
 			body {
-				background: #363636;
+				background: #000;
 				margin: 0;
 				padding: 0;
 			}
@@ -17,8 +21,11 @@
 			}
 			#debug {
 				background-color: #FFF;
-				padding: 15px;
+				padding: 30px;
 				margin: 15px;
+				position: fixed;
+				bottom: 15px;
+				left: 15px;
 			}
 			#gameOver {
 				display: none;
@@ -32,7 +39,7 @@
 	</head>
 	<body>
 		<div id="debug">
-			<div id="paddle">nothing</div>
+			<div id="paddle">Ready.</div>
 			<ul id="users"></ul>
 		</div>
 		<div id="gameOver">
@@ -224,7 +231,7 @@
 			}
 
 			function render() {
-				game.debug.spriteInfo(ball.graphics, 32, 32);
+				// game.debug.spriteInfo(ball.graphics, 32, 32);
 				game.debug.body(paddle);
 				game.debug.body(ball.graphics);
 			}
