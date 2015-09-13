@@ -23,6 +23,7 @@
                 update: update, 
                 render: render
             });
+            var speed = 150;
             var ring;
             var paddle = {
                 angle: 0,
@@ -133,6 +134,16 @@
                 ball.graphics.beginFill(0xacffcf);
                 ball.graphics.drawCircle(ball.x, ball.y, ball.radius);
                 ball.graphics.endFill(); */
+
+                var xvel = ball.graphics.body.velocity.x;
+                var yvel = ball.graphics.body.velocity.y;
+                var vel = Math.sqrt(xvel*xvel + yvel*yvel);
+                if (Math.abs(vel - speed) > 1) {
+                    var multiplier = speed / vel;
+                    ball.graphics.body.velocity.x = xvel * multiplier;
+                    ball.graphics.body.velocity.y = yvel * multiplier;
+                }
+                // console.log(xvel*xvel + yvel*yvel);
                 
                 if (cursors.right.isDown) {
                     paddle.body.rotateRight(60);
